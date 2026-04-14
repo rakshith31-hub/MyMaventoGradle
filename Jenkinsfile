@@ -1,40 +1,33 @@
 pipeline {
-    agent any  // Use any available agent
+    agent any
 
     tools {
-        gradle 'Gradle'  // Ensure this matches the name configured in Jenkins
+        gradle 'Gradle'
         jdk 'JDK'
     }
+
     stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'master', url: 'https://github.com/rakshith31-hub/MyMaventoGradle.git'
-            }
-        }
+
+        // ❌ REMOVE manual checkout (Jenkins already does it)
+        // This was causing your issue
 
         stage('Build') {
             steps {
-                sh 'gradle build'  // Run Gradle build
+                sh 'gradle build'
             }
         }
 
         stage('Test') {
             steps {
-                sh 'gradle test'  // Run unit tests
+                sh 'gradle test'
             }
         }
 
-        
-        
-       
         stage('Run Application') {
             steps {
-                // Start the JAR application
                 sh 'gradle run'
             }
         }
-
-        
     }
 
     post {
