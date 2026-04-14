@@ -2,37 +2,46 @@ pipeline {
     agent any
 
     tools {
-        gradle 'Gradle'
-        jdk 'JDK'
+        maven 'Maven'
     }
 
     stages {
 
-        // ❌ REMOVE manual checkout (Jenkins already does it)
-        // This was causing your issue
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/Brijesh-ue/MyMavenToGradle.git'
+            }
+        }
 
         stage('Build') {
             steps {
-                sh 'gradle build'
+                sh 'mvn clean package'
             }
         }
 
         stage('Test') {
             steps {
-                sh 'gradle test'
+                sh 'mvn test'
+            }
+        }
+
+        stage('Check Target Folder') {
+            steps {
+                sh 'ls -l target'
             }
         }
 
         stage('Run Application') {
             steps {
-                sh 'gradle run'
+                sh 'java -jar target/MyMavenToGradle-1.0-SNAPSHOT.jar'
             }
         }
+
     }
 
     post {
         success {
-            echo 'Build and deployment successful!'
+            echo 'Build and execution successful!'
         }
         failure {
             echo 'Build failed!'
